@@ -4,6 +4,7 @@ import 'antd/dist/antd.css';
 import '../stylesheets/App.scss';
 import { connect } from 'react-redux';
 import { addPizza } from '../actions';
+import { OrderList } from './OrderList';
 // import photoPizzas from '../photoPizzas';
 
 class Order extends Component {
@@ -11,6 +12,41 @@ class Order extends Component {
     // state = {
     //     photoPizzas,
     // }
+
+    renderListOrder() {
+        const findOrder = (element) => element.id === this.props.match.params.id;
+        const indexOrder = this.props.orders.findIndex(findOrder);
+        const totalPrice = Math.round(this.props.orders[indexOrder].price*100)/100;
+
+        const orderList = this.props.photoPizzas.map(item => {
+            let i=0;
+            return(
+                <OrderList
+                    key={item.title}
+                    title={item.title}
+                    count={this.props.orders[indexOrder].order[i].count}
+                    // orders={this.props.orders}
+                    // orderIndex={this.props.orders.indexOf(this.props.match.params.id)}
+                    pizzaPrice={item.price}
+                />
+                // <Col key={item.title}>
+                //     <Row gutter={16}>
+                //         <Col>{item.title}</Col>
+                //         <Col>{item.price}</Col>
+                //     </Row>
+                // </Col>
+                
+            );
+        });
+
+        return (
+            <div>
+                {orderList}
+                <p>Soit un total de : {totalPrice} €</p>
+            </div>
+            
+        );
+    }
 
     render() {
         const PizzasList = this.props.photoPizzas.map( item => {
@@ -47,12 +83,14 @@ class Order extends Component {
                         <Col span={8}>
                             <Card>
                                 <p>Détail de la commande n°{this.props.match.params.id}</p>
+                                {this.renderListOrder()}
                             </Card>
 
-                            {/* <OrderDetail
+                            {/* <OrderList
                                 orderId={this.props.match.params.id}
-
-
+                                orders={this.props.orders}
+                                orderIndex={this.props.orders.indexOf(this.props.match.params.id)}
+                                pizzas={this.props.photoPizzas}
                             /> */}
                             
                         </Col>
